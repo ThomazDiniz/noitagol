@@ -62,7 +62,33 @@ textarea {
   resize: vertical;
 }
 
-#input { height: 92px; margin-bottom: 10px; }
+.toprow {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 12px;
+}
+
+.toprow #input {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+}
+
+.rlebox {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rlebox .row {
+  margin-bottom: 0;
+}
+
+#input { height: 110px; }
+.rlebox .rle { flex: 1; height: auto; }
 .rle { height: 48px; }
 
 input[type=number] {

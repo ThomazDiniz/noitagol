@@ -9,7 +9,8 @@
 <body>
   <h1>Noita's Conway's Game of Life</h1>
 
-  <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
+  <div class="toprow">
+    <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
 0320412200014222421222201100032013411135
 3102210440002001040401441420330220342415
 2313131300311321201422313314413414412115
@@ -18,27 +19,20 @@
 133312203301031131112112103223145
 13104242241303041102031232043135</textarea>
 
-  <div class="row">
-    <label class="inline" for="colOff">Column offset: <input type="number" id="colOff" value="1"></label>
-    <label class="inline" for="evenOff">Even-row offset: <input type="number" id="evenOff" value="0"></label>
-    <button id="swapOff" type="button" title="swap even/odd offsets">&#8646;</button>
-    <label class="inline" for="oddOff">Odd-row offset: <input type="number" id="oddOff" value="6"></label>
-    <span class="sep"></span>
-    <label class="inline" for="baseGap">Triad base gap: <input type="number" id="baseGap" value="1"></label>
-    <label class="inline" for="marginX">Triangle margin X: <input type="number" id="marginX" value="100"></label>
-    <label class="inline" for="marginY">Triangle margin Y: <input type="number" id="marginY" value="100"></label>
+    <div class="rlebox">
+      <div class="row">
+        <button id="copyEyes">Copy RLE</button>
+        <button id="siteEyes">Open conwaylife.com</button>
+        <span class="meta" id="dimsEyes"></span>
+      </div>
+      <textarea id="rleEyes" class="rle" spellcheck="false" readonly></textarea>
+    </div>
   </div>
 
   <div class="boards">
     <section class="board">
       <h2><button id="toggleEyes" type="button" class="toggle">&#9662; Eyes</button></h2>
       <div id="eyesBody">
-        <div class="row">
-          <button id="copyEyes">Copy RLE</button>
-          <button id="siteEyes">Open conwaylife.com</button>
-          <span class="meta" id="dimsEyes"></span>
-        </div>
-        <textarea id="rleEyes" class="rle" spellcheck="false" readonly></textarea>
         <div class="row">
           <button id="playEyes">Start</button>
           <button id="stepEyes">Step</button>
@@ -48,6 +42,11 @@
           <label class="inline" for="speedEyes">Speed: <span id="speedValEyes">10</span>
             <input type="range" id="speedEyes" min="1" max="1000" value="10"></label>
           <span class="meta" id="genEyes"></span>
+          <span class="sep"></span>
+          <label class="inline" for="colOff">Column offset: <input type="number" id="colOff" value="1"></label>
+          <label class="inline" for="evenOff">Even-row offset: <input type="number" id="evenOff" value="0"></label>
+          <button id="swapOff" type="button" title="swap even/odd offsets">&#8646;</button>
+          <label class="inline" for="oddOff">Odd-row offset: <input type="number" id="oddOff" value="6"></label>
         </div>
         <div class="cvwrap" id="wrapEyes"><canvas id="cvEyes"></canvas></div>
       </div>
@@ -71,6 +70,10 @@
           <label class="inline" for="speedTriad">Speed: <span id="speedValTriad">10</span>
             <input type="range" id="speedTriad" min="1" max="1000" value="10"></label>
           <span class="meta" id="genTriad"></span>
+          <span class="sep"></span>
+          <label class="inline" for="baseGap">Triad base gap: <input type="number" id="baseGap" value="1"></label>
+          <label class="inline" for="marginX">Triangle margin X: <input type="number" id="marginX" value="100"></label>
+          <label class="inline" for="marginY">Triangle margin Y: <input type="number" id="marginY" value="100"></label>
         </div>
         <div class="cvwrap" id="wrapTriad"><canvas id="cvTriad"></canvas></div>
       </div>
