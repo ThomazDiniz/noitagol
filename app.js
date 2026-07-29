@@ -100,4 +100,19 @@ shared.swapOff.addEventListener("click", () => {
   refresh();
 });
 
+const presetSelect = document.getElementById("preset");
+MESSAGES.forEach((message, i) => {
+  const option = document.createElement("option");
+  option.value = String(i);
+  option.textContent = message.label;
+  presetSelect.appendChild(option);
+});
+presetSelect.addEventListener("change", () => {
+  const i = parseInt(presetSelect.value, 10);
+  if (!isNaN(i) && MESSAGES[i]) {
+    shared.input.value = MESSAGES[i].text;
+    refresh();
+  }
+});
+
 refresh();
