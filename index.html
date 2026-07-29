@@ -7,7 +7,12 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Noita's Conway's Game of Life</h1>
+  <div class="titlebar">
+    <h1>Noita's Conway's Game of Life</h1>
+    <select id="preset">
+      <option value="">Load message&hellip;</option>
+    </select>
+  </div>
 
   <div class="toprow">
     <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
@@ -83,6 +88,7 @@
     </section>
   </div>
 
+  <script src="presets.js"></script>
   <script src="encoding.js"></script>
   <script src="game-of-life.js"></script>
   <script src="camera.js"></script>
