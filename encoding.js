@@ -33,6 +33,69 @@ function buildEyeCells(text, colOffset, evenOffset, oddOffset) {
   return cells;
 }
 
+function placeEye(cells, digit, x0, y0) {
+  const eye = EYES[digit];
+  if (!eye) return;
+  for (let dy = 0; dy < EYE_H; dy++) {
+    for (let dx = 0; dx < EYE_W; dx++) {
+      if (eye[dy][dx] === "1") cells.add((x0 + dx) + "," + (y0 + dy));
+    }
+  }
+}
+
+function readTriads(topLine, botLine) {
+  const triads = [];
+  let pt = 0, pb = 0, down = true;
+  while (pt < topLine.length && pb < botLine.length) {
+    if (down) {
+      if (pt + 1 >= topLine.length) break;
+      triads.push({ type: "down", top: [topLine[pt], topLine[pt + 1]], bottom: [botLine[pb]] });
+      pt += 2;
+      pb += 1;
+    } else {
+      if (pb + 1 >= botLine.length) break;
+      triads.push({ type: "up", top: [topLine[pt]], bottom: [botLine[pb], botLine[pb + 1]] });
+      pt += 1;
+      pb += 2;
+    }
+    down = !down;
+  }
+  return triads;
+}
+
+function buildTriadTriangles(text, baseGap, marginX, marginY) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const cells = new Set();
+  const pitch = EYE_W + baseGap;
+  const half = Math.round(pitch / 2);
+  const triadWidth = EYE_W + pitch;
+  const stepX = triadWidth + marginX;
+  const stepY = EYE_H * 2 + marginY;
+
+  let stripY = 0;
+  for (let s = 0; s < lines.length; s += 2) {
+    const topLine = lines[s];
+    const botLine = lines[s + 1] !== undefined ? lines[s + 1] : "";
+    const triads = readTriads(topLine, botLine);
+
+    triads.forEach((triad, i) => {
+      const x = i * stepX;
+      if (triad.type === "down") {
+        placeEye(cells, triad.top[0], x, stripY);
+        placeEye(cells, triad.top[1], x + pitch, stripY);
+        placeEye(cells, triad.bottom[0], x + half, stripY + EYE_H);
+      } else {
+        placeEye(cells, triad.bottom[0], x, stripY + EYE_H);
+        placeEye(cells, triad.bottom[1], x + pitch, stripY + EYE_H);
+        placeEye(cells, triad.top[0], x + half, stripY);
+      }
+    });
+
+    stripY += stepY;
+  }
+  return normalizeCells(cells);
+}
+
 function normalizeCells(cells) {
   let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
   for (const key of cells) {

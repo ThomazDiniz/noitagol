@@ -9,17 +9,7 @@
 <body>
   <h1>Noita's Conway's Game of Life</h1>
 
-  <div class="row">
-    <label class="inline" for="colOff">Column offset: <input type="number" id="colOff" value="1"></label>
-    <label class="inline" for="evenOff">Even-row offset: <input type="number" id="evenOff" value="0"></label>
-    <button id="swapOff" type="button" title="swap even/odd offsets">&#8646;</button>
-    <label class="inline" for="oddOff">Odd-row offset: <input type="number" id="oddOff" value="6"></label>
-  </div>
-
-  <div class="editors">
-    <div class="editor">
-      <div class="ehead"></div>
-      <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
+  <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
 0320412200014222421222201100032013411135
 3102210440002001040401441420330220342415
 2313131300311321201422313314413414412115
@@ -27,36 +17,70 @@
 0403314323411221010100401204124424424025
 133312203301031131112112103223145
 13104242241303041102031232043135</textarea>
-    </div>
-
-    <div class="editor">
-      <div class="ehead">
-        <button id="copyBtn">Copy RLE</button>
-        <button id="siteBtn">Open conwaylife.com</button>
-        <span class="meta" id="dims"></span>
-      </div>
-      <textarea id="rle" spellcheck="false" readonly></textarea>
-    </div>
-  </div>
 
   <div class="row">
-    <button id="playBtn">Start</button>
-    <button id="stepBtn">Step</button>
-    <button id="resetBtn">Reset</button>
-    <button id="invertBtn">Invert</button>
-    <button id="trimBtn">Trim space</button>
-    <div>
-      <label for="speed">Speed: <span id="speedVal">10</span> gen/s</label>
-      <input type="range" id="speed" min="1" max="1000" value="10" style="width:420px;vertical-align:middle;">
-    </div>
-    <span class="meta" id="gen"></span>
+    <label class="inline" for="colOff">Column offset: <input type="number" id="colOff" value="1"></label>
+    <label class="inline" for="evenOff">Even-row offset: <input type="number" id="evenOff" value="0"></label>
+    <button id="swapOff" type="button" title="swap even/odd offsets">&#8646;</button>
+    <label class="inline" for="oddOff">Odd-row offset: <input type="number" id="oddOff" value="6"></label>
+    <span class="sep"></span>
+    <label class="inline" for="baseGap">Triad base gap: <input type="number" id="baseGap" value="1"></label>
+    <label class="inline" for="marginX">Triangle margin X: <input type="number" id="marginX" value="100"></label>
+    <label class="inline" for="marginY">Triangle margin Y: <input type="number" id="marginY" value="100"></label>
   </div>
 
-  <div class="cvwrap"><canvas id="cv"></canvas></div>
+  <div class="boards">
+    <section class="board">
+      <h2><button id="toggleEyes" type="button" class="toggle">&#9662; Eyes</button></h2>
+      <div id="eyesBody">
+        <div class="row">
+          <button id="copyEyes">Copy RLE</button>
+          <button id="siteEyes">Open conwaylife.com</button>
+          <span class="meta" id="dimsEyes"></span>
+        </div>
+        <textarea id="rleEyes" class="rle" spellcheck="false" readonly></textarea>
+        <div class="row">
+          <button id="playEyes">Start</button>
+          <button id="stepEyes">Step</button>
+          <button id="resetEyes">Reset</button>
+          <button id="invertEyes">Invert</button>
+          <button id="trimEyes">Trim space</button>
+          <label class="inline" for="speedEyes">Speed: <span id="speedValEyes">10</span>
+            <input type="range" id="speedEyes" min="1" max="1000" value="10"></label>
+          <span class="meta" id="genEyes"></span>
+        </div>
+        <div class="cvwrap" id="wrapEyes"><canvas id="cvEyes"></canvas></div>
+      </div>
+    </section>
+
+    <section class="board">
+      <h2><button id="toggleTriad" type="button" class="toggle">&#9656; Triads</button></h2>
+      <div id="triadBody" hidden>
+        <div class="row">
+          <button id="copyTriad">Copy RLE</button>
+          <button id="siteTriad">Open conwaylife.com</button>
+          <span class="meta" id="dimsTriad"></span>
+        </div>
+        <textarea id="rleTriad" class="rle" spellcheck="false" readonly></textarea>
+        <div class="row">
+          <button id="playTriad">Start</button>
+          <button id="stepTriad">Step</button>
+          <button id="resetTriad">Reset</button>
+          <button id="invertTriad">Invert</button>
+          <button id="trimTriad">Trim space</button>
+          <label class="inline" for="speedTriad">Speed: <span id="speedValTriad">10</span>
+            <input type="range" id="speedTriad" min="1" max="1000" value="10"></label>
+          <span class="meta" id="genTriad"></span>
+        </div>
+        <div class="cvwrap" id="wrapTriad"><canvas id="cvTriad"></canvas></div>
+      </div>
+    </section>
+  </div>
 
   <script src="encoding.js"></script>
   <script src="game-of-life.js"></script>
   <script src="camera.js"></script>
+  <script src="board-view.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
