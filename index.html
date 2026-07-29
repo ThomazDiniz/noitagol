@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noita's Conway's Game of Life</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Noita's Conway's Game of Life</h1>
+
+  <div class="row">
+    <label class="inline" for="colOff">Column offset: <input type="number" id="colOff" value="1"></label>
+    <label class="inline" for="evenOff">Even-row offset: <input type="number" id="evenOff" value="0"></label>
+    <button id="swapOff" type="button" title="swap even/odd offsets">&#8646;</button>
+    <label class="inline" for="oddOff">Odd-row offset: <input type="number" id="oddOff" value="6"></label>
+  </div>
+
+  <div class="editors">
+    <div class="editor">
+      <div class="ehead"></div>
+      <textarea id="input" spellcheck="false">2010132233040411302321143130330040240005
+0320412200014222421222201100032013411135
+3102210440002001040401441420330220342415
+2313131300311321201422313314413414412115
+0140032121141300411101002412410040310015
+0403314323411221010100401204124424424025
+133312203301031131112112103223145
+13104242241303041102031232043135</textarea>
+    </div>
+
+    <div class="editor">
+      <div class="ehead">
+        <button id="copyBtn">Copy RLE</button>
+        <button id="siteBtn">Open conwaylife.com</button>
+        <span class="meta" id="dims"></span>
+      </div>
+      <textarea id="rle" spellcheck="false" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="playBtn">Start</button>
+    <button id="stepBtn">Step</button>
+    <button id="resetBtn">Reset</button>
+    <button id="invertBtn">Invert</button>
+    <button id="trimBtn">Trim space</button>
+    <div>
+      <label for="speed">Speed: <span id="speedVal">10</span> gen/s</label>
+      <input type="range" id="speed" min="1" max="1000" value="10" style="width:420px;vertical-align:middle;">
+    </div>
+    <span class="meta" id="gen"></span>
+  </div>
+
+  <div class="cvwrap"><canvas id="cv"></canvas></div>
+
+  <script src="encoding.js"></script>
+  <script src="game-of-life.js"></script>
+  <script src="camera.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
