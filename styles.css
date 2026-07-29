@@ -14,7 +14,23 @@ body {
 h1 {
   font-size: 18px;
   font-weight: bold;
-  margin: 0 0 12px;
+  margin: 0;
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+#preset {
+  font-family: monospace;
+  font-size: 13px;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  padding: 4px;
 }
 
 h2 {
