@@ -9,6 +9,8 @@ function createBoardView(dom, buildPattern) {
   let cellPx = 1;
 
   let board = new Set();
+  let trail = new Set();
+  let trailOn = false;
   let generation = 0;
   let timer = null;
 
@@ -29,6 +31,7 @@ function createBoardView(dom, buildPattern) {
       const [x, y] = key.split(",").map(Number);
       board.add((x + margin) + "," + (y + margin));
     }
+    trail = new Set(board);
 
     resizeCanvas();
     camera.fitRect(margin * cellPx, margin * cellPx, pattern.W * cellPx, pattern.H * cellPx);
@@ -47,6 +50,14 @@ function createBoardView(dom, buildPattern) {
   function draw() {
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, dom.canvas.width, dom.canvas.height);
+
+    if (trailOn) {
+      ctx.fillStyle = "#bbb";
+      for (const key of trail) {
+        const [x, y] = key.split(",").map(Number);
+        ctx.fillRect(x * cellPx, y * cellPx, cellPx, cellPx);
+      }
+    }
 
     ctx.fillStyle = "#000";
     for (const key of board) {
@@ -67,6 +78,7 @@ function createBoardView(dom, buildPattern) {
   function stepOnce() {
     board = nextGeneration(board);
     generation++;
+    for (const key of board) trail.add(key);
     draw();
   }
 
@@ -128,6 +140,14 @@ function createBoardView(dom, buildPattern) {
     dom.trimBtn.style.background = trimOn ? "#000" : "";
     dom.trimBtn.style.color = trimOn ? "#fff" : "";
     resetSim();
+  });
+
+  dom.trailBtn.addEventListener("click", () => {
+    trailOn = !trailOn;
+    dom.trailBtn.textContent = trailOn ? "Trail: ON" : "Trail";
+    dom.trailBtn.style.background = trailOn ? "#000" : "";
+    dom.trailBtn.style.color = trailOn ? "#fff" : "";
+    draw();
   });
 
   return { regenerate };

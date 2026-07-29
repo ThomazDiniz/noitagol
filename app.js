@@ -24,7 +24,8 @@ function boardDom(suffix) {
     stepBtn:  document.getElementById("step" + suffix),
     resetBtn: document.getElementById("reset" + suffix),
     invertBtn: document.getElementById("invert" + suffix),
-    trimBtn:  document.getElementById("trim" + suffix)
+    trimBtn:  document.getElementById("trim" + suffix),
+    trailBtn: document.getElementById("trail" + suffix)
   };
 }
 
