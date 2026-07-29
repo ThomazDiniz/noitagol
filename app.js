@@ -45,8 +45,8 @@ let triadInvertEach = false;
 
 function buildTriadPattern() {
   const baseGap = intVal(shared.baseGap, 1);
-  const marginX = intVal(shared.marginX, 10);
-  const marginY = intVal(shared.marginY, 10);
+  const marginX = intVal(shared.marginX, 32);
+  const marginY = intVal(shared.marginY, 32);
   return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY, triadInvertEach);
 }
 
