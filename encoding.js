@@ -63,14 +63,15 @@ function readTriads(topLine, botLine) {
   return triads;
 }
 
-function buildTriadTriangles(text, baseGap, marginX, marginY) {
+function buildTriadTriangles(text, baseGap, marginX, marginY, invertEach) {
   const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const cells = new Set();
   const pitch = EYE_W + baseGap;
   const half = Math.round(pitch / 2);
   const triadWidth = EYE_W + pitch;
+  const triadHeight = EYE_H * 2;
   const stepX = triadWidth + marginX;
-  const stepY = EYE_H * 2 + marginY;
+  const stepY = triadHeight + marginY;
 
   let stripY = 0;
   for (let s = 0; s < lines.length; s += 2) {
@@ -79,15 +80,31 @@ function buildTriadTriangles(text, baseGap, marginX, marginY) {
     const triads = readTriads(topLine, botLine);
 
     triads.forEach((triad, i) => {
-      const x = i * stepX;
+      const ox = i * stepX;
+      const oy = stripY;
+
+      const local = new Set();
       if (triad.type === "down") {
-        placeEye(cells, triad.top[0], x, stripY);
-        placeEye(cells, triad.top[1], x + pitch, stripY);
-        placeEye(cells, triad.bottom[0], x + half, stripY + EYE_H);
+        placeEye(local, triad.top[0], 0, 0);
+        placeEye(local, triad.top[1], pitch, 0);
+        placeEye(local, triad.bottom[0], half, EYE_H);
       } else {
-        placeEye(cells, triad.bottom[0], x, stripY + EYE_H);
-        placeEye(cells, triad.bottom[1], x + pitch, stripY + EYE_H);
-        placeEye(cells, triad.top[0], x + half, stripY);
+        placeEye(local, triad.bottom[0], 0, EYE_H);
+        placeEye(local, triad.bottom[1], pitch, EYE_H);
+        placeEye(local, triad.top[0], half, 0);
+      }
+
+      if (invertEach) {
+        for (let y = 0; y < triadHeight; y++) {
+          for (let x = 0; x < triadWidth; x++) {
+            if (!local.has(x + "," + y)) cells.add((ox + x) + "," + (oy + y));
+          }
+        }
+      } else {
+        for (const key of local) {
+          const [x, y] = key.split(",").map(Number);
+          cells.add((ox + x) + "," + (oy + y));
+        }
       }
     });
 

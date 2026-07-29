@@ -40,11 +40,13 @@ function buildEyesPattern() {
   return normalizeCells(buildEyeCells(shared.input.value, colOff, evenOff, oddOff));
 }
 
+let triadInvertEach = false;
+
 function buildTriadPattern() {
   const baseGap = intVal(shared.baseGap, 1);
-  const marginX = intVal(shared.marginX, 100);
-  const marginY = intVal(shared.marginY, 100);
-  return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY);
+  const marginX = intVal(shared.marginX, 10);
+  const marginY = intVal(shared.marginY, 10);
+  return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY, triadInvertEach);
 }
 
 const eyesView  = createBoardView(boardDom("Eyes"), buildEyesPattern);
@@ -80,6 +82,15 @@ toggleTriad.addEventListener("click", () => {
 [shared.input, shared.colOff, shared.evenOff, shared.oddOff,
  shared.baseGap, shared.marginX, shared.marginY].forEach(el =>
   el.addEventListener("input", refresh));
+
+const invertTriadsOnly = document.getElementById("invertTriadsOnly");
+invertTriadsOnly.addEventListener("click", () => {
+  triadInvertEach = !triadInvertEach;
+  invertTriadsOnly.textContent = triadInvertEach ? "Invert triads: ON" : "Invert triads";
+  invertTriadsOnly.style.background = triadInvertEach ? "#000" : "";
+  invertTriadsOnly.style.color = triadInvertEach ? "#fff" : "";
+  if (triadOpen) triadView.regenerate();
+});
 
 shared.swapOff.addEventListener("click", () => {
   const even = shared.evenOff.value;
