@@ -1,4 +1,17 @@
-function nextGeneration(live) {
+function parseRule(str) {
+  const match = /^\s*[bB]([0-9]*)\/[sS]([0-9]*)\s*$/.exec(str || "");
+  if (!match) {
+    return { string: "B3/S23", birth: new Set([3]), survive: new Set([2, 3]) };
+  }
+  const birth = new Set(match[1].split("").map(Number));
+  const survive = new Set(match[2].split("").map(Number));
+  return { string: "B" + match[1] + "/S" + match[2], birth, survive };
+}
+
+function nextGeneration(live, rule) {
+  const birth = (rule && rule.birth) || new Set([3]);
+  const survive = (rule && rule.survive) || new Set([2, 3]);
+
   const neighbourCounts = new Map();
   const bump = (x, y) => {
     const key = x + "," + y;
@@ -16,7 +29,7 @@ function nextGeneration(live) {
 
   const next = new Set();
   for (const [key, count] of neighbourCounts) {
-    if (count === 3 || (count === 2 && live.has(key))) next.add(key);
+    if (live.has(key) ? survive.has(count) : birth.has(count)) next.add(key);
   }
   return next;
 }

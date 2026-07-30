@@ -1,4 +1,4 @@
-function createBoardView(dom, buildPattern) {
+function createBoardView(dom, buildPattern, getRule) {
   const ctx = dom.canvas.getContext("2d");
   const camera = createCamera(dom.wrap, dom.canvas);
 
@@ -17,7 +17,7 @@ function createBoardView(dom, buildPattern) {
   function regenerate() {
     const base = buildPattern();
     pattern = inverted ? invertRegion(base) : base;
-    dom.rle.value = cellsToRLE(pattern.set, pattern.W, pattern.H);
+    dom.rle.value = cellsToRLE(pattern.set, pattern.W, pattern.H, getRule().string);
     dom.dims.textContent = pattern.W + " x " + pattern.H + " · " + pattern.set.size + " live cells";
     resetSim();
   }
@@ -76,7 +76,7 @@ function createBoardView(dom, buildPattern) {
   }
 
   function stepOnce() {
-    board = nextGeneration(board);
+    board = nextGeneration(board, getRule());
     generation++;
     for (const key of board) trail.add(key);
     draw();

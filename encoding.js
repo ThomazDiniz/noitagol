@@ -145,8 +145,9 @@ function invertRegion(pattern) {
   return { set, W: pattern.W, H: pattern.H };
 }
 
-function cellsToRLE(set, W, H) {
-  if (W === 0) return "x = 0, y = 0, rule = B3/S23\n!";
+function cellsToRLE(set, W, H, rule) {
+  const ruleStr = rule || "B3/S23";
+  if (W === 0) return "x = 0, y = 0, rule = " + ruleStr + "\n!";
 
   let body = "";
   for (let y = 0; y < H; y++) {
@@ -178,7 +179,7 @@ function cellsToRLE(set, W, H) {
   body = body.replace(/\$+/g, m => (m.length > 1 ? m.length + "$" : "$"));
 
   const tokens = body.match(/\d*[bo$]|!/g) || [];
-  let out = "x = " + W + ", y = " + H + ", rule = B3/S23\n";
+  let out = "x = " + W + ", y = " + H + ", rule = " + ruleStr + "\n";
   let line = "";
   for (const token of tokens) {
     if (line.length + token.length > 70) { out += line + "\n"; line = ""; }

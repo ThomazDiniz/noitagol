@@ -4,6 +4,7 @@ const shared = {
   evenOff: document.getElementById("evenOff"),
   oddOff:  document.getElementById("oddOff"),
   swapOff: document.getElementById("swapOff"),
+  rule:    document.getElementById("rule"),
   baseGap: document.getElementById("baseGap"),
   marginX: document.getElementById("marginX"),
   marginY: document.getElementById("marginY")
@@ -50,8 +51,12 @@ function buildTriadPattern() {
   return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY, triadInvertEach);
 }
 
-const eyesView  = createBoardView(boardDom("Eyes"), buildEyesPattern);
-const triadView = createBoardView(boardDom("Triad"), buildTriadPattern);
+function getRule() {
+  return parseRule(shared.rule.value);
+}
+
+const eyesView  = createBoardView(boardDom("Eyes"), buildEyesPattern, getRule);
+const triadView = createBoardView(boardDom("Triad"), buildTriadPattern, getRule);
 
 const toggleEyes = document.getElementById("toggleEyes");
 const eyesBody = document.getElementById("eyesBody");
@@ -80,7 +85,7 @@ toggleTriad.addEventListener("click", () => {
   if (triadOpen) triadView.regenerate();
 });
 
-[shared.input, shared.colOff, shared.evenOff, shared.oddOff,
+[shared.input, shared.rule, shared.colOff, shared.evenOff, shared.oddOff,
  shared.baseGap, shared.marginX, shared.marginY].forEach(el =>
   el.addEventListener("input", refresh));
 
