@@ -9,7 +9,83 @@ const EYES = {
 const EYE_W = 11;
 const EYE_H = 7;
 
-function buildEyeCells(text, colOffset, evenOffset, oddOffset) {
+function floodExterior(grid, W, H) {
+  const exterior = Array.from({ length: H }, () => Array(W).fill(false));
+  const stack = [];
+  for (let x = 0; x < W; x++) { stack.push([x, 0]); stack.push([x, H - 1]); }
+  for (let y = 0; y < H; y++) { stack.push([0, y]); stack.push([W - 1, y]); }
+
+  while (stack.length) {
+    const [x, y] = stack.pop();
+    if (x < 0 || y < 0 || x >= W || y >= H) continue;
+    if (exterior[y][x] || grid[y][x] !== 0) continue;
+    exterior[y][x] = true;
+    stack.push([x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1]);
+  }
+  return exterior;
+}
+
+function invertEyeInterior(eye) {
+  const H = eye.length;
+  const W = eye[0].length;
+  const grid = eye.map(row => row.split("").map(c => (c === "1" ? 1 : 0)));
+  const exterior = floodExterior(grid, W, H);
+
+  function touchesExterior(x, y) {
+    if (x === 0 || y === 0 || x === W - 1 || y === H - 1) return true;
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const nx = x + dx, ny = y + dy;
+        if (nx >= 0 && ny >= 0 && nx < W && ny < H && exterior[ny][nx]) return true;
+      }
+    }
+    return false;
+  }
+
+  const out = [];
+  for (let y = 0; y < H; y++) {
+    let row = "";
+    for (let x = 0; x < W; x++) {
+      if (exterior[y][x]) {
+        row += "0";                    // outside the eye: untouched
+      } else if (grid[y][x] === 1) {
+        row += touchesExterior(x, y) ? "1" : "0"; // outline stays, inner fill flips off
+      } else {
+        row += "1";                    // enclosed empty flips on
+      }
+    }
+    out.push(row);
+  }
+  return out;
+}
+
+function invertEyeAll(eye) {
+  const H = eye.length;
+  const W = eye[0].length;
+  const grid = eye.map(row => row.split("").map(c => (c === "1" ? 1 : 0)));
+  const exterior = floodExterior(grid, W, H);
+
+  const out = [];
+  for (let y = 0; y < H; y++) {
+    let row = "";
+    for (let x = 0; x < W; x++) {
+      if (exterior[y][x]) row += "0";              // outside stays untouched
+      else row += grid[y][x] === 1 ? "0" : "1";    // flip the whole shape (contour + inside)
+    }
+    out.push(row);
+  }
+  return out;
+}
+
+const INVERTED_EYES = {};
+const INVERTED_EYES_FULL = {};
+for (const key in EYES) {
+  INVERTED_EYES[key] = invertEyeInterior(EYES[key]);
+  INVERTED_EYES_FULL[key] = invertEyeAll(EYES[key]);
+}
+
+function buildEyeCells(text, colOffset, evenOffset, oddOffset, eyeMap) {
+  const eyes = eyeMap || EYES;
   const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const cells = new Set();
 
@@ -18,7 +94,7 @@ function buildEyeCells(text, colOffset, evenOffset, oddOffset) {
     const y0 = row * EYE_H;
 
     for (let col = 0; col < line.length; col++) {
-      const eye = EYES[line[col]];
+      const eye = eyes[line[col]];
       if (!eye) continue;
 
       const x0 = xStart + col * (EYE_W + colOffset);

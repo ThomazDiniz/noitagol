@@ -35,11 +35,16 @@ function intVal(el, fallback) {
   return isNaN(n) ? fallback : n;
 }
 
+let eyeMode = 0; // 0 = normal, 1 = invert inside, 2 = invert inside + contour
+
 function buildEyesPattern() {
   const colOff  = intVal(shared.colOff, 0);
   const evenOff = intVal(shared.evenOff, 0);
   const oddOff  = intVal(shared.oddOff, 0);
-  return normalizeCells(buildEyeCells(shared.input.value, colOff, evenOff, oddOff));
+  const eyeMap = eyeMode === 1 ? INVERTED_EYES
+               : eyeMode === 2 ? INVERTED_EYES_FULL
+               : EYES;
+  return normalizeCells(buildEyeCells(shared.input.value, colOff, evenOff, oddOff, eyeMap));
 }
 
 let triadInvertEach = false;
@@ -88,6 +93,26 @@ toggleTriad.addEventListener("click", () => {
 [shared.input, shared.rule, shared.colOff, shared.evenOff, shared.oddOff,
  shared.baseGap, shared.marginX, shared.marginY].forEach(el =>
   el.addEventListener("input", refresh));
+
+const invertEyeOnly = document.getElementById("invertEyeOnly");
+const invertEyeContour = document.getElementById("invertEyeContour");
+
+function setActive(btn, on) {
+  btn.style.background = on ? "#000" : "";
+  btn.style.color = on ? "#fff" : "";
+}
+
+function setEyeMode(mode) {
+  eyeMode = mode;
+  invertEyeOnly.textContent = eyeMode === 1 ? "Invert eye: ON" : "Invert eye";
+  invertEyeContour.textContent = eyeMode === 2 ? "Invert eye + contour: ON" : "Invert eye + contour";
+  setActive(invertEyeOnly, eyeMode === 1);
+  setActive(invertEyeContour, eyeMode === 2);
+  if (eyesOpen) eyesView.regenerate();
+}
+
+invertEyeOnly.addEventListener("click", () => setEyeMode(eyeMode === 1 ? 0 : 1));
+invertEyeContour.addEventListener("click", () => setEyeMode(eyeMode === 2 ? 0 : 2));
 
 const invertTriadsOnly = document.getElementById("invertTriadsOnly");
 invertTriadsOnly.addEventListener("click", () => {
