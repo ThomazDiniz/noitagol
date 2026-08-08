@@ -109,8 +109,8 @@ function buildEyeCells(text, colOffset, evenOffset, oddOffset, eyeMap) {
   return cells;
 }
 
-function placeEye(cells, digit, x0, y0) {
-  const eye = EYES[digit];
+function placeEye(cells, digit, x0, y0, eyeMap) {
+  const eye = (eyeMap || EYES)[digit];
   if (!eye) return;
   for (let dy = 0; dy < EYE_H; dy++) {
     for (let dx = 0; dx < EYE_W; dx++) {
@@ -139,7 +139,7 @@ function readTriads(topLine, botLine) {
   return triads;
 }
 
-function buildTriadTriangles(text, baseGap, marginX, marginY, invertEach) {
+function buildTriadTriangles(text, baseGap, marginX, marginY, invertEach, eyeMap) {
   const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
   const cells = new Set();
   const pitch = EYE_W + baseGap;
@@ -161,13 +161,13 @@ function buildTriadTriangles(text, baseGap, marginX, marginY, invertEach) {
 
       const local = new Set();
       if (triad.type === "down") {
-        placeEye(local, triad.top[0], 0, 0);
-        placeEye(local, triad.top[1], pitch, 0);
-        placeEye(local, triad.bottom[0], half, EYE_H);
+        placeEye(local, triad.top[0], 0, 0, eyeMap);
+        placeEye(local, triad.top[1], pitch, 0, eyeMap);
+        placeEye(local, triad.bottom[0], half, EYE_H, eyeMap);
       } else {
-        placeEye(local, triad.bottom[0], 0, EYE_H);
-        placeEye(local, triad.bottom[1], pitch, EYE_H);
-        placeEye(local, triad.top[0], half, 0);
+        placeEye(local, triad.bottom[0], 0, EYE_H, eyeMap);
+        placeEye(local, triad.bottom[1], pitch, EYE_H, eyeMap);
+        placeEye(local, triad.top[0], half, 0, eyeMap);
       }
 
       if (invertEach) {

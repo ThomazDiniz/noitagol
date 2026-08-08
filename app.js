@@ -48,12 +48,16 @@ function buildEyesPattern() {
 }
 
 let triadInvertEach = false;
+let triadEyeMode = 0; // 0 = normal, 1 = invert inside, 2 = invert inside + contour
 
 function buildTriadPattern() {
   const baseGap = intVal(shared.baseGap, 1);
   const marginX = intVal(shared.marginX, 32);
   const marginY = intVal(shared.marginY, 32);
-  return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY, triadInvertEach);
+  const eyeMap = triadEyeMode === 1 ? INVERTED_EYES
+               : triadEyeMode === 2 ? INVERTED_EYES_FULL
+               : EYES;
+  return buildTriadTriangles(shared.input.value, baseGap, marginX, marginY, triadInvertEach, eyeMap);
 }
 
 function getRule() {
@@ -118,10 +122,24 @@ const invertTriadsOnly = document.getElementById("invertTriadsOnly");
 invertTriadsOnly.addEventListener("click", () => {
   triadInvertEach = !triadInvertEach;
   invertTriadsOnly.textContent = triadInvertEach ? "Invert triads: ON" : "Invert triads";
-  invertTriadsOnly.style.background = triadInvertEach ? "#000" : "";
-  invertTriadsOnly.style.color = triadInvertEach ? "#fff" : "";
+  setActive(invertTriadsOnly, triadInvertEach);
   if (triadOpen) triadView.regenerate();
 });
+
+const invertEyeOnlyTriad = document.getElementById("invertEyeOnlyTriad");
+const invertEyeContourTriad = document.getElementById("invertEyeContourTriad");
+
+function setTriadEyeMode(mode) {
+  triadEyeMode = mode;
+  invertEyeOnlyTriad.textContent = triadEyeMode === 1 ? "Invert eye: ON" : "Invert eye";
+  invertEyeContourTriad.textContent = triadEyeMode === 2 ? "Invert eye + contour: ON" : "Invert eye + contour";
+  setActive(invertEyeOnlyTriad, triadEyeMode === 1);
+  setActive(invertEyeContourTriad, triadEyeMode === 2);
+  if (triadOpen) triadView.regenerate();
+}
+
+invertEyeOnlyTriad.addEventListener("click", () => setTriadEyeMode(triadEyeMode === 1 ? 0 : 1));
+invertEyeContourTriad.addEventListener("click", () => setTriadEyeMode(triadEyeMode === 2 ? 0 : 2));
 
 shared.swapOff.addEventListener("click", () => {
   const even = shared.evenOff.value;
